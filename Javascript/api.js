@@ -7,4 +7,10 @@ const pesquisarAlunos = async() => {
     return data
 }
 
-export {pesquisarAlunos}
+const buscarAlunos = async () => {
+    const cards = alunos.map(createCard)
+    container.replaceChildren(...cards)
+    return cards
+}
+
+export {pesquisarAlunos, buscarAlunos}

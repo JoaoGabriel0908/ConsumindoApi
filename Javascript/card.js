@@ -1,53 +1,36 @@
 'use strict'
 
-import {pesquisarAlunos} from './api.js'
+import {pesquisarAlunos, buscarAlunos} from './api.js'
 
 const alunos = await pesquisarAlunos()
 
 // Criando cards que foi pesquisado pelo usuário
-const createCard = ({nome, turma, status}) => {
+const createCard = () => {
     
     const card = document.createElement('div')
-    card.classList.add('card-jogo')
+    card.classList.add('card')
     card.innerHTML = `
-        <span class="card-nome">
-            <h1>${nome}</h1>
-        </span>
-        <span class="card-generos">
-            <p class="info">${turma}</p>
-        </span>
-        <span class="card-data">
-            <p class="info">${status}</p>
-        </span>
+        <div class="card-text">${alunos[1].nome}</div>
+        <div class="card-turm">${alunos[0].turma}</div>
+        <div class="card-status">${alunos[0].status}</div>
         </div>
     `
     return card
 }
 
-const buscarAlunos = async () => {
-    const container = document.getElementById('container-alunos')
-    const estudantes = await alunos;
-    const cards = estudantes.map(createCard);
-    container.replaceChildren(...cards)
-    return cards
-}
-
-buscarAlunos()
-
-
 // Criando Classe 
 class card extends HTMLElement {
     constructor(){
         super();
-        this.build()
+        // Construindo o método e enviando para a constante shadow, para depois chamar no html
+        this.shadow = this.attachShadow({mode: 'open'})
     }
 
-    build () {
-        // Construindo o método e enviando para a constante shadow, para depois chamar no html
-        const shadow = this.attachShadow({mode: 'open'})
+    connectedCallback () {
         // Adicionando filhos que no futuro irá ser elementos
-        shadow.appendChild(this.style())
-        shadow.appendChild(this.createCard())
+        this.shadow.appendChild(this.style())
+        // this.shadow.appendChild(this.createCard())
+        this.shadow.appendChild(createCard())
     }
 
     style(){
@@ -92,6 +75,10 @@ class card extends HTMLElement {
                 background-size: cover;
                 box-shadow: inset 0 0 12px #000;
             }
+
+            .card-status {
+                background-color: ${this.bgcolor()};
+            }
         `
         return style
     }
@@ -108,10 +95,10 @@ class card extends HTMLElement {
     card.innerHTML = `
         <div class="card-text">${this.nome()}</div>
         <div class="card-image"></div>
-        <div class="card-turm">${this.turma()}</div> 
-        <div class="card-text">${this.status()}</div> 
+         
     `
-
+        // <div class="card-turm">${this.turma()}</div> 
+        // <div class="card-status">${this.status()}</div>
     return card
     }
 
@@ -127,7 +114,7 @@ class card extends HTMLElement {
     }
 
     nome() {
-        const nome = this.getAttribute('data-card-text') ?? "Aluno"
+        const nome = this.getAttribute('card-text') ?? "Aluno"
         return nome
     }
 
@@ -137,10 +124,10 @@ class card extends HTMLElement {
     }
 
     status() {
-        const status = this.getAnimations('card-text') ?? "Nulo"
+        const status = this.getAnimations('aprovado') = '#FFF' ?? "Nulo"
         return status
     }
 }
-// Definindo 
+// Definindo a tag que irá ficar no html
 customElements.define('card-aluno', card)
  
