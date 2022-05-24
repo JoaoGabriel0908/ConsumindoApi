@@ -8,6 +8,7 @@ const pesquisarAlunos = async() => {
 }
 
 const buscarAlunos = async () => {
+    const alunos = await pesquisarAlunos()
     const cards = alunos.map(createCard)
     container.replaceChildren(...cards)
     return cards

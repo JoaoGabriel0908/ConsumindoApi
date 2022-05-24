@@ -5,14 +5,15 @@ import {pesquisarAlunos, buscarAlunos} from './api.js'
 const alunos = await pesquisarAlunos()
 
 // Criando cards que foi pesquisado pelo usuário
-const createCard = () => {
+const createCard = ({nome, turma, status, foto} = alunos[0]) => {
     
     const card = document.createElement('div')
     card.classList.add('card')
     card.innerHTML = `
-        <div class="card-text">${alunos[1].nome}</div>
-        <div class="card-turm">${alunos[0].turma}</div>
-        <div class="card-status">${alunos[0].status}</div>
+        <div class="card-text">${nome}</div>
+        <div class="card-turm">${turma}</div>
+        <div class="card-status">${status}</div>
+        <div class="card-image">${foto}</div>
         </div>
     `
     return card
@@ -75,6 +76,7 @@ class card extends HTMLElement {
                 background-size: cover;
                 box-shadow: inset 0 0 12px #000;
             }
+
 
             .card-status {
                 background-color: ${this.bgcolor()};
